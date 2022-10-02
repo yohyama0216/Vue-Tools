@@ -1,0 +1,309 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+    <link rel='shortlink' href='https://wp.me/P8BkYb-2'/><link rel='dns-prefetch' href='//v0.wordpress.com'/>
+    <link rel="icon" href="http://yohyama.com/wp-content/themes/cocoon-master/images/site-icon32x32.png" sizes="32x32"/>
+    <link rel="icon" href="http://yohyama.com/wp-content/themes/cocoon-master/images/site-icon192x192.png" sizes="192x192"/>
+    <link rel="apple-touch-icon" href="http://yohyama.com/wp-content/themes/cocoon-master/images/site-icon180x180.png"/>
+    <meta name="msapplication-TileImage" content="http://yohyama.com/wp-content/themes/cocoon-master/images/site-icon270x270.png"/>
+    <link rel="canonical" href="http://yohyama.com/">
+    <meta name="description" content="クラロワのデッキが検索できるサイトです">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","mainEntityOfPage":{"@type":"WebPage","@id":"http://yohyama.com/"},"headline":"このブログについて","image":{"@type":"ImageObject","url":"http://yohyama.com/wp-content/themes/cocoon-master/screenshot.jpg","width":880,"height":660},"datePublished":"2018-06-27T20:24:53+00:00","dateModified":"2019-11-29T18:07:37+00:00","author":{"@type":"Person","name":"かんりにん"},"publisher":{"@type":"Organization","name":"よーやまのアーチェリーブログ","logo":{"@type":"ImageObject","url":"http://yohyama.com/wp-content/themes/cocoon-master/images/no-amp-logo.png","width":206,"height":60}},"description":"クラロワのデッキが検索できるサイトです"}</script>
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="クラロワのデッキが検索できるサイトです"><meta property="og:title" content="クラロワデッキ検索">
+    <meta property="og:url" content="lotoyamaguchi.github.io/deckSearch/index.html">
+    <meta property="og:image" content="http://yohyama.com/wp-content/themes/cocoon-master/screenshot.jpg"><meta property="og:site_name" content="クラロワデッキ検索">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="article:published_time" content="2018-06-27T20:24:53+00:00"/>
+    <meta property="article:modified_time" content="2019-11-29T18:07:37+00:00"/>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="クラロワのデッキが検索できるサイトです"><meta name="twitter:title" content="クラロワデッキ検索">
+    <meta name="twitter:url" content="lotoyamaguchi.github.io/deckSearch/index.html">
+    <meta name="twitter:image" content="http://yohyama.com/wp-content/themes/cocoon-master/screenshot.jpg">
+    <meta name="twitter:domain" content="lotoyamaguchi.github.io">
+</head>
+
+<body>
+
+    <header>
+
+    </header>
+    <style type="text/css">
+        body {
+            background: #efdec1;
+            font-size: 14px;
+            font-family: Verdana, sans-serif;
+        }
+
+        .container {
+            width:700px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 4px;
+            padding: 16px;
+            position: relative;
+        }
+        .search {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .result {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #cardList li {
+            display: inline-block;
+            width: 15%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
+    <section class="container">
+        <h1>Clash Royale デッキ検索(Ver1.0.0）</h1>
+        <p>デッキ検索サイトのアイコン、ソーシャル用の画像の設定をする</p>
+        <div id="app">
+            <section class="search">
+                <p>全{{ deckCounts }}デッキのうち、<strong>{{ searchResults.length }}</strong>デッキが見つかりました。</p>
+                <ul id="cardList">
+                    <li v-for="card in popularCards">
+                        <label><input type="radio" v-model="checkCard" v-bind:value="card.id">
+                            <img v-bind:src="'./cr-api-assets/cards-75/' + card.name + '.png'" />
+                        </label>
+                    </li>
+                </ul>
+            </section>
+            <p>{{ checkCard }}</p>
+            <section class="result">
+                <ul>
+                    <table border="#111111">
+                        <tr id="result" v-for="result in searchResults">
+                            <td>
+                                <table>
+                                    <tr>
+                                        <th colspan="6">{{ result.deck_name_jp }}</th>
+                                        <th colspan="2"><a
+                                                v-bind:href="'https://link.clashroyale.com/deck/jp?deck=' + result.deck_card_id + ''  "
+                                                target="_blank">デッキをコピー</a></th>
+                                    </tr>
+                                    <tr>
+                                        <td v-for="item in result.deck_card_name.split(';')">
+                                            <img v-bind:src="'./cr-api-assets/cards-75/' + item + '.png'" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </ul>
+            </section>
+            <input type="checkbox" v-model="checkCard" value="テスト">
+        </div>
+    </section>
+    <script>
+
+        new Vue({
+            el: '#app',
+            data: {
+                checkCard: [],
+                popularCards: [
+                    { "name": "giant", "elixir": 5, "id": 26000003, "jpName": "ジャイアント" },
+                    { "name": "pekka", "elixir": 7, "id": 26000004, "jpName": "P.E.K.K.A" },
+                    { "name": "golem", "elixir": 8, "id": 26000009, "jpName": "ゴーレム" },
+                    { "name": "balloon", "elixir": 5, "id": 26000006, "jpName": "エアバルーン" },
+                    { "name": "goblin-giant", "elixir": 6, "id": 26000060, "jpName": "ゴブジャイアント" },
+                    { "name": "prince", "elixir": 5, "id": 26000016, "jpName": "プリンス" },
+                    { "name": "giant-skeleton", "elixir": 6, "id": 26000020, "jpName": "巨大スケルトン" },
+
+                    { "name": "royal-giant", "elixir": 6, "id": 26000024, "jpName": "ロイヤルジャイアント" },
+                    { "name": "dark-prince", "elixir": 4, "id": 26000027, "jpName": "ダークプリンス" },
+                    { "name": "three-musketeers", "elixir": 9, "id": 26000028, "jpName": "三銃士" },
+                    { "name": "lava-hound", "elixir": 7, "id": 26000029, "jpName": "ラヴァハウンド" },
+                    { "name": "sparky", "elixir": 6, "id": 26000033, "jpName": "スパーキー" },
+                    { "name": "mega-knight", "elixir": 7, "id": 26000055, "jpName": "メガナイト" },
+                    { "name": "graveyard", "elixir": 5, "id": 28000010, "jpName": "スケルトンラッシュ" },
+                    { "name": "hog-rider", "elixir": 4, "id": 26000021, "jpName": "ホグライダー" },
+                    { "name": "miner", "elixir": 3, "id": 26000032, "jpName": "ディガー" },
+                    { "name": "ram-rider", "elixir": 5, "id": 26000051, "jpName": "ラムライダー" },
+                    { "name": "wall-breakers", "elixir": 2, "id": 26000058, "jpName": "ウォールブレイカー" },
+                    { "name": "elixir-golem", "elixir": 3, "id": 26000067, "jpName": "エリクサーゴーレム" },
+                    { "name": "battle-healer", "elixir": 4, "id": 26000068, "jpName": "バトルヒーラー" },
+                    { "name": "x-bow", "elixir": 6, "id": 27000008, "jpName": "巨大クロスボウ" },
+
+                    { "name": "goblin-barrel", "elixir": 3, "id": 28000004, "jpName": "ゴブリンバレル" },
+
+                ],
+                otherCards: [
+                    { "name": "skeleton-barrel", "elixir": 3, "id": 26000056, "jpName": "スケルトンバレル" },
+                    { "name": "lumberjack", "elixir": 4, "id": 26000035, "jpName": "ランバージャック" },
+                    { "name": "battle-ram", "elixir": 4, "id": 26000036, "jpName": "攻城バーバリアン" },
+
+
+                    { "name": "witch", "elixir": 5, "id": 26000007, "jpName": "ネクロマンサー" },
+                    { "name": "ice-wizard", "elixir": 3, "id": 26000023, "jpName": "アイスウィザード" },
+                    { "name": "electro-wizard", "elixir": 4, "id": 26000042, "jpName": "エレクトロウィザード" },
+                    { "name": "princess", "elixir": 3, "id": 26000026, "jpName": "プリンセス" },
+
+
+                    { "name": "bomber", "elixir": 3, "id": 26000013, "jpName": "ボンバー" },
+                    { "name": "musketeer", "elixir": 4, "id": 26000014, "jpName": "マスケット銃士" },
+                    { "name": "baby-dragon", "elixir": 4, "id": 26000015, "jpName": "ベビードラゴン" },
+                    { "name": "executioner", "elixir": 5, "id": 26000045, "jpName": "執行人ファルチェ" },
+
+                    { "name": "wizard", "elixir": 5, "id": 26000017, "jpName": "ウィザード" },
+                    { "name": "royal-hogs", "elixir": 5, "id": 26000059, "jpName": "ロイヤルホグ" },
+                    { "name": "magic-archer", "elixir": 4, "id": 26000062, "jpName": "マジックアーチャー" },
+                    { "name": "electro-dragon", "elixir": 5, "id": 26000063, "jpName": "ライトニングドラゴン" },
+                    { "name": "firecracker", "elixir": 3, "id": 26000064, "jpName": "ロケット砲士" },
+                    { "name": "bowler", "elixir": 5, "id": 26000034, "jpName": "ボウラー" },
+
+                    { "name": "skeleton-dragons", "elixir": 4, "id": 26000080, "jpName": "スケルトンドラゴン" },
+                    { "name": "valkyrie", "elixir": 4, "id": 26000011, "jpName": "バルキリー" },
+
+                    { "name": "bandit", "elixir": 3, "id": 26000046, "jpName": "アサシン ユーノ" },
+                    { "name": "royal-recruits", "elixir": 7, "id": 26000047, "jpName": "見習い親衛隊" },
+                    { "name": "night-witch", "elixir": 4, "id": 26000048, "jpName": "ダークネクロ" },
+                    { "name": "rascals", "elixir": 5, "id": 26000053, "jpName": "アウトロー" },
+                    { "name": "mini-pekka", "elixir": 4, "id": 26000018, "jpName": "ミニP.E.K.K.A" },
+                    { "name": "elite-barbarians", "elixir": 6, "id": 26000043, "jpName": "エリートバーバリアン" }, { "name": "hunter", "elixir": 4, "id": 26000044, "jpName": "ハンター" },
+                    { "name": "fisherman", "elixir": 3, "id": 26000061, "jpName": "漁師トリトン" },
+                    { "name": "knight", "elixir": 3, "id": 26000000, "jpName": "ナイト" },
+                    { "name": "archers", "elixir": 3, "id": 26000001, "jpName": "アーチャー" },
+                    { "name": "spear-goblins", "elixir": 2, "id": 26000019, "jpName": "槍ゴブリン" },
+
+                    { "name": "bats", "elixir": 2, "id": 26000049, "jpName": "コウモリの群れ" },
+                    { "name": "barbarians", "elixir": 5, "id": 26000008, "jpName": "バーバリアン" },
+                    { "name": "minion-horde", "elixir": 5, "id": 26000022, "jpName": "ガーゴイルの群れ" },
+                    { "name": "skeletons", "elixir": 1, "id": 26000010, "jpName": "スケルトン" },
+
+                    { "name": "minions", "elixir": 3, "id": 26000005, "jpName": "ガーゴイル" },
+                    { "name": "skeleton-army", "elixir": 3, "id": 26000012, "jpName": "スケルトン部隊" },
+                    { "name": "guards", "elixir": 3, "id": 26000025, "jpName": "盾の戦士" },
+
+                    { "name": "ice-spirit", "elixir": 1, "id": 26000030, "jpName": "アイススピリット" },
+                    { "name": "fire-spirits", "elixir": 2, "id": 26000031, "jpName": "ファイアスピリット" },
+
+
+
+                    { "name": "inferno-dragon", "elixir": 4, "id": 26000037, "jpName": "インフェルノドラゴン" },
+                    { "name": "ice-golem", "elixir": 2, "id": 26000038, "jpName": "アイスゴーレム" },
+                    { "name": "mega-minion", "elixir": 3, "id": 26000039, "jpName": "メガガーゴイル" },
+                    { "name": "dart-goblin", "elixir": 3, "id": 26000040, "jpName": "吹き矢ゴブリン" },
+                    { "name": "goblin-gang", "elixir": 3, "id": 26000041, "jpName": "ゴブリンギャング" },
+
+
+
+                    { "name": "royal-ghost", "elixir": 3, "id": 26000050, "jpName": "ロイヤルゴースト" },
+
+                    { "name": "zappies", "elixir": 4, "id": 26000052, "jpName": "ザッピー" },
+
+                    { "name": "cannon-cart", "elixir": 5, "id": 26000054, "jpName": "60式 ムート" },
+
+
+                    { "name": "flying-machine", "elixir": 4, "id": 26000057, "jpName": "ホバリング砲" },
+
+
+
+
+                    { "name": "goblins", "elixir": 2, "id": 26000002, "jpName": "ゴブリン" },
+                    { "name": "cannon", "elixir": 3, "id": 27000000, "jpName": "大砲" },
+                    { "name": "goblin-hut", "elixir": 5, "id": 27000001, "jpName": "ゴブリンの小屋" },
+                    { "name": "mortar", "elixir": 4, "id": 27000002, "jpName": "迫撃砲" },
+                    { "name": "inferno-tower", "elixir": 5, "id": 27000003, "jpName": "インフェルノタワー" },
+                    { "name": "bomb-tower", "elixir": 4, "id": 27000004, "jpName": "ボムタワー" },
+                    { "name": "barbarian-hut", "elixir": 7, "id": 27000005, "jpName": "バーバリアンの小屋" },
+                    { "name": "tesla", "elixir": 4, "id": 27000006, "jpName": "テスラ" },
+                    { "name": "elixir-collector", "elixir": 6, "id": 27000007, "jpName": "エリクサーポンプ" },
+                    { "name": "tombstone", "elixir": 3, "id": 27000009, "jpName": "墓石" },
+                    { "name": "furnace", "elixir": 4, "id": 27000010, "jpName": "オーブン" },
+                    { "name": "goblin-cage", "elixir": 4, "id": 27000012, "jpName": "ゴブリンの檻" },
+                    { "name": "fireball", "elixir": 4, "id": 28000000, "jpName": "ファイアボール" },
+                    { "name": "arrows", "elixir": 3, "id": 28000001, "jpName": "矢の雨" },
+                    { "name": "rage", "elixir": 2, "id": 28000002, "jpName": "レイジ" },
+                    { "name": "rocket", "elixir": 6, "id": 28000003, "jpName": "ロケット" },
+                    { "name": "freeze", "elixir": 4, "id": 28000005, "jpName": "フリーズ" },
+                    { "name": "mirror", "elixir": 1, "id": 28000006, "jpName": "鏡" },
+                    { "name": "lightning", "elixir": 6, "id": 28000007, "jpName": "ライトニング" },
+                    { "name": "zap", "elixir": 2, "id": 28000008, "jpName": "ザップ" },
+                    { "name": "poison", "elixir": 4, "id": 28000009, "jpName": "ポイズン" },
+
+                    { "name": "the-log", "elixir": 2, "id": 28000011, "jpName": "ローリングウッド" },
+                    { "name": "tornado", "elixir": 3, "id": 28000012, "jpName": "トルネード" },
+                    { "name": "clone", "elixir": 3, "id": 28000013, "jpName": "クローン" },
+                    { "name": "earthquake", "elixir": 3, "id": 28000014, "jpName": "アースクエイク" },
+                    { "name": "barbarian-barrel", "elixir": 2, "id": 28000015, "jpName": "ローリングバーバリアン" },
+                    { "name": "heal-spirit", "elixir": 1, "id": 28000016, "jpName": "ヒールスピリット" },
+                    { "name": "giant-snowball", "elixir": 2, "id": 28000017, "jpName": "巨大雪玉" },
+                    { "name": "royal-delivery", "elixir": 3, "id": 28000018, "jpName": "ロイヤルデリバリー" }
+                ],
+                decks: [
+                    { deck_name_jp: '枯渇（ナイト、インフェ型）', deck_card_id: '28000004;26000026;26000041;28000011;28000003;26000000;26000030;27000003', deck_card_name: 'goblin-barrel;princess;goblin-gang;the-log;rocket;knight;ice-spirit;inferno-tower' },
+                    { deck_name_jp: '枯渇（バルキリー、テスラ型）', deck_card_id: '28000004;26000026;26000041;28000011;28000003;26000011;26000030;27000006', deck_card_name: 'goblin-barrel;princess;goblin-gang;the-log;rocket;valkyrie;ice-spirit;tesla' },
+                    { deck_name_jp: '枯渇（アウトロー、プリンス型）', deck_card_id: '28000004;26000026;26000041;28000011;28000003;26000053;26000016;26000040', deck_card_name: 'goblin-barrel;princess;goblin-gang;the-log;rocket;rascals;prince;dart-goblin' },
+                    { deck_name_jp: '枯渇（ダクプリ、ユーノ型）', deck_card_id: '28000004;26000026;26000041;28000011;28000003;26000053;26000027;26000046', deck_card_name: 'goblin-barrel;princess;goblin-gang;the-log;rocket;rascals;dark-prince;bandit' },
+                    { deck_name_jp: '鬼枯渇', deck_card_id: '28000004;26000026;26000041;28000011;26000012;26000022;26000032;27000003', deck_card_name: 'goblin-barrel;princess;goblin-gang;the-log;skeleton-army;minion-horde;miner;inferno-tower' },
+                    { deck_name_jp: 'IT（インフェ）バルーン（マスケ、スケルトン型）', deck_card_id: '26000006;28000017;26000038;28000015;26000032;26000010;27000003;26000014', deck_card_name: 'balloon;giant-snowball;ice-golem;barbarian-barrel;miner;skeletons;inferno-tower;musketeer' },
+                    { deck_name_jp: 'IT（インフェ）バルーン（アウトロー、ディガー型）', deck_card_id: '26000006;28000017;26000038;28000015;26000032;26000049;27000003;26000053', deck_card_name: 'balloon;giant-snowball;ice-golem;barbarian-barrel;miner;bats;inferno-tower;rascals' },
+                    { deck_name_jp: 'ボムタワーバルーン', deck_card_id: '26000006;28000017;26000038;28000011;26000032;26000049;27000004;26000053', deck_card_name: 'balloon;giant-snowball;ice-golem;the-log;miner;bats;bomb-tower;rascals' },
+                    { deck_name_jp: 'ランバーバルーン', deck_card_id: '26000006;28000017;26000038;28000015;26000014;26000049;26000030;26000035', deck_card_name: 'balloon;giant-snowball;ice-golem;barbarian-barrel;musketeer;bats;ice-spirit;lumberjack' },
+                    { deck_name_jp: 'バルーンファルチェ', deck_card_id: '26000006;26000045;26000032;28000012;26000010;26000030;26000011;28000008', deck_card_name: 'balloon;executioner;miner;tornado;skeletons;ice-spirit;valkyrie;zap' },
+                    { deck_name_jp: 'バルーンフリーズ', deck_card_id: '26000006;26000035;26000004;28000012;26000039;28000005;26000023;28000008', deck_card_name: 'balloon;lumberjack;pekka;tornado;mega-minion;freeze;ice-wizard;zap' },
+                    { deck_name_jp: '2.6ホグ', deck_card_id: '26000021;26000014;26000010;26000038;26000030;28000000;28000011;27000000', deck_card_name: 'hog-rider;musketeer;skeletons;ice-golem;ice-spirit;fireball;the-log;cannon' },
+                    { deck_name_jp: '2.9ホグ', deck_card_id: '26000021;26000014;26000002;28000012;26000030;28000000;28000011;26000000', deck_card_name: 'hog-rider;musketeer;goblins;tornado;ice-spirit;fireball;the-log;knight' },
+                    { deck_name_jp: 'ホグファルチェ', deck_card_id: '26000021;26000045;26000011;28000012;26000030;28000003;28000011;26000002', deck_card_name: 'hog-rider;executioner;valkyrie;tornado;ice-spirit;rocket;the-log;goblins' },
+                    { deck_name_jp: '迫撃ホグ', deck_card_id: '26000021;27000002;26000000;26000001;28000001;28000011;26000049;26000002', deck_card_name: 'hog-rider;mortar;knight;archers;arrows;the-log;bats;goblins' },
+                    { deck_name_jp: '三銃士ホグ', deck_card_id: '26000021;26000028;26000000;26000041;28000001;28000011;26000030;26000005', deck_card_name: 'hog-rider;three-musketeers;knight;goblin-gang;arrows;the-log;ice-spirit;minions' },
+                    { deck_name_jp: 'ホグロケット', deck_card_id: '26000021;26000026;26000018;26000038;26000030;28000003;26000049;28000008', deck_card_name: 'hog-rider;princess;mini-pekka;ice-golem;ice-spirit;rocket;bats;zap' },
+                    { deck_name_jp: 'GPP', deck_card_id: '26000003;26000027;26000016;28000000;28000011;26000039;26000042;28000008', deck_card_name: 'giant;dark-prince;prince;fireball;the-log;mega-minion;electro-wizard;zap' },
+                    { deck_name_jp: 'ジャイマジアチャ', deck_card_id: '26000003;26000062;26000050;26000016;26000030;28000009;28000012;28000008', deck_card_name: 'giant;magic-archer;royal-ghost;prince;ice-spirit;poison;tornado;zap' },
+                    { deck_name_jp: 'ゴレマジアチャ', deck_card_id: '26000009;26000062;26000046;27000007;26000027;28000012;26000039;28000008', deck_card_name: 'golem;magic-archer;bandit;elixir-collector;dark-prince;tornado;mega-minion;zap' },
+                    { deck_name_jp: 'ゴレダクネ', deck_card_id: '26000009;26000048;26000044;26000025;28000012;28000003;26000049;28000008', deck_card_name: 'golem;night-witch;hunter;guards;tornado;rocket;bats;zap' },
+                    { deck_name_jp: 'ゴレダクネランバー', deck_card_id: '26000009;26000048;26000035;26000015;26000039;28000012;28000003;27000007', deck_card_name: 'golem;night-witch;lumberjack;baby-dragon;mega-minion;tornado;rocket;elixir-collector' },
+                    { deck_name_jp: 'ゴレダクネメガナイト', deck_card_id: '26000009;26000048;26000055;27000007;26000039;26000002;26000049;28000008', deck_card_name: 'golem;night-witch;mega-knight;elixir-collector;mega-minion;goblins;bats;zap' },
+                    { deck_name_jp: 'ディガポイゴースト', deck_card_id: '26000032;26000050;26000037;28000009;26000025;26000056;26000049;28000008', deck_card_name: 'miner;royal-ghost;inferno-dragon;poison;guards;skeleton-barrel;bats;zap' },
+                    { deck_name_jp: 'ディガポイプリンス', deck_card_id: '26000032;26000016;26000037;28000009;26000025;26000038;26000049;28000008', deck_card_name: 'miner;prince;inferno-dragon;poison;guards;ice-golem;bats;zap' },
+                    { deck_name_jp: 'ディガポイザッピー', deck_card_id: '26000032;26000052;26000057;28000009;26000025;26000038;26000044;28000012', deck_card_name: 'miner;zappies;flying-machine;poison;guards;ice-golem;hunter;tornado' },
+                    { deck_name_jp: 'ディガポイ', deck_card_id: '26000032;26000000;26000010;26000030;26000042;28000009;28000011;27000003', deck_card_name: 'miner;knight;skeletons;ice-spirit;electro-wizard;poison;the-log;inferno-tower' },
+                    { deck_name_jp: 'メガナイトゴースト', deck_card_id: '26000055;26000050;26000032;26000037;27000001;26000056;26000049;28000008', deck_card_name: 'mega-knight;royal-ghost;miner;inferno-dragon;goblin-hut;skeleton-barrel;bats;zap' },
+                    { deck_name_jp: 'メガナイトホグ', deck_card_id: '26000055;26000021;26000037;28000009;26000038;26000002;26000049;28000008', deck_card_name: 'mega-knight;hog-rider;inferno-dragon;poison;ice-golem;goblins;bats;zap' },
+                    { deck_name_jp: 'スケラゴースト', deck_card_id: '28000010;26000050;26000037;28000009;26000025;26000038;26000039;28000008', deck_card_name: 'graveyard;royal-ghost;inferno-dragon;poison;guards;ice-golem;mega-minion;zap' },
+                    { deck_name_jp: 'スケラポイズン', deck_card_id: '28000010;26000042;26000034;26000015;26000000;26000002;28000009;28000012', deck_card_name: 'graveyard;electro-wizard;bowler;baby-dragon;knight;goblins;poison;tornado' },
+                    { deck_name_jp: 'ラヴァバル', deck_card_id: '26000029;26000006;28000008;28000000;26000039;26000005;26000025;27000009', deck_card_name: 'lava-hound;balloon;zap;fireball;mega-minion;minions;guards;tombstone' },
+                    { deck_name_jp: '2.9迫撃', deck_card_id: '27000002;26000001;26000000;26000030;26000010;28000011;28000003;28000001', deck_card_name: 'mortar;archers;knight;ice-spirit;skeletons;the-log;rocket;arrows' },
+                    { deck_name_jp: '遅延クロスボウ', deck_card_id: '27000008;26000023;26000038;26000030;26000039;28000012;28000003;28000011', deck_card_name: 'x-bow;ice-wizard;ice-golem;ice-spirit;mega-minion;tornado;rocket;the-log' },
+                    { deck_name_jp: '2.9クロス', deck_card_id: '27000008;26000001;26000038;26000030;26000039;28000000;26000002;28000011', deck_card_name: 'x-bow;archers;ice-golem;ice-spirit;mega-minion;fireball;goblins;the-log' },
+                    { deck_name_jp: '高回転三銃士', deck_card_id: '26000028;26000000;26000032;26000030;26000005;26000031;28000011;27000007', deck_card_name: 'three-musketeers;knight;miner;ice-spirit;minions;fire-spirits;the-log;elixir-collector' },
+                ],
+            },
+            computed: {
+                deckCounts: function () {
+                    var count = this.decks.length;
+                    return count;
+                },
+                searchResults: function () {
+                    var result = [];
+                    var checkCard = this.checkCard;
+                    var deckList = this.decks;
+                    var length = checkCard.length;
+
+                    if (this.checkCard.length == 0) {
+                        return deckList;
+                    } else if (length > 8) {
+                        return "8個以内で選択してください。";
+                    }
+
+                    for (var i in deckList) {
+                        var check = deckList[i].deck_card_id.indexOf(checkCard);
+                        if (check !== -1) {
+                            result.push(deckList[i]);
+                        }
+                    }
+                    return Array.from(new Set(result));
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
